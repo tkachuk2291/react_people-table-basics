@@ -9,13 +9,23 @@ interface PeopleTable {
   loader : boolean
 }
 
+enum Type {
+    mother = 'mother',
+    father = 'father'
+}
+
 export const PeopleTable: React.FC<PeopleTable> = ({ persons, error , loader }) => {
   const { slug } = useParams<{ slug: string }>();
+  console.log(loader , "ЧТО ТУТ")
 
-  const getParentLink = (name: string | null, persons: Person[]) => {
+
+  const getParentLink = (name: string | null,
+                         persons: Person[],
+                          type: Type
+  ) => {
     const parent = persons.find(p => p.name === name);
     return parent ? (
-      <NavLink to={`../${parent.slug}`}>{parent.name || '-'}</NavLink>
+      <NavLink to={`../${parent.slug}`} className={classNames(type === Type.mother ? "has-text-danger" : '')}>{parent.name || '-'}</NavLink>
     ) : (
       name || '-'
     );
@@ -27,7 +37,6 @@ export const PeopleTable: React.FC<PeopleTable> = ({ persons, error , loader }) 
         {loader && (
           <Loader />
         )}
-
         {error ? (
           <p data-cy="peopleLoadingError" className="has-text-danger">
             Something went wrong
@@ -65,9 +74,8 @@ export const PeopleTable: React.FC<PeopleTable> = ({ persons, error , loader }) 
                   <td>{person.born}</td>
                   <td>{person.died}</td>
 
-                  <td>{getParentLink(person.motherName, persons)}</td>
-
-                  <td>{getParentLink(person.fatherName, persons)}</td>
+                  <td>{getParentLink(person.motherName, persons, Type.mother)}</td>
+                  <td>{getParentLink(person.fatherName, persons, Type.father)}</td>
                 </tr>
               ))}
             </tbody>
