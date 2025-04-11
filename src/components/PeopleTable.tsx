@@ -27,7 +27,6 @@ export const PeopleTable: React.FC<PeopleTable> = ({
   loader,
 }) => {
   const { slug } = useParams<{ slug: string }>();
-  console.log(loader, 'ЧТО ТУТ');
 
   const getParentLink = (
     name: string | null,
@@ -37,7 +36,7 @@ export const PeopleTable: React.FC<PeopleTable> = ({
     const parent = persons.find(p => p.name === name);
     return parent ? (
       <NavLink
-        to={`../${parent.slug}`}
+        to={`/people/${parent.slug}`}
         className={classNames(type === Type.mother ? 'has-text-danger' : '')}
       >
         {parent.name || '-'}
@@ -82,10 +81,16 @@ export const PeopleTable: React.FC<PeopleTable> = ({
                   data-cy="person"
                   className={classNames(
                     person.slug === slug ? 'has-background-warning' : '',
-                  )}
-                >
+                  )}>
                   <td>
-                    <NavLink to={`../${person.slug}`} className={classNames(person.sex === Sex.women ? 'has-text-danger' : '')}>{person.name}</NavLink>
+                    <NavLink
+                      to={`/people/${person.slug}`}
+                      className={classNames(
+                        person.sex === Sex.women ? 'has-text-danger' : '',
+                      )}
+                    >
+                      {person.name}
+                    </NavLink>
                   </td>
 
                   <td>{person.sex}</td>

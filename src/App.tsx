@@ -3,16 +3,12 @@ import { NavLink, Outlet } from 'react-router-dom';
 import classNames from 'classnames';
 
 export const App = () => {
-
   interface Options {
-    isActive: boolean
+    isActive: boolean;
   }
 
- const activeTab = ({ isActive } : Options) =>
-   classNames('navbar-item', {  ' has-background-grey-lighter' : isActive });
-
-
-
+  const activeTab = ({ isActive }: Options) =>
+    classNames('navbar-item', { ' has-background-grey-lighter': isActive });
 
   return (
     <div data-cy="app">
@@ -27,10 +23,7 @@ export const App = () => {
             <NavLink to="/" className={activeTab}>
               Home
             </NavLink>
-
-            <NavLink
-              to="people"
-              className={activeTab}>
+            <NavLink to="people" className={activeTab}>
               People
             </NavLink>
           </div>
