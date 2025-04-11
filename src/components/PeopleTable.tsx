@@ -3,29 +3,45 @@ import { Person } from '../types';
 import { NavLink, useParams } from 'react-router-dom';
 import React from 'react';
 import classNames from 'classnames';
+import { LoaderEnum } from '../types/loader';
+
 interface PeopleTable {
   persons: Person[];
   error: string;
-  loader : boolean
+  loader: LoaderEnum;
 }
 
 enum Type {
-    mother = 'mother',
-    father = 'father'
+  mother = 'mother',
+  father = 'father',
 }
 
-export const PeopleTable: React.FC<PeopleTable> = ({ persons, error , loader }) => {
+enum Sex {
+  man = 'm',
+  women = 'f',
+}
+
+export const PeopleTable: React.FC<PeopleTable> = ({
+  persons,
+  error,
+  loader,
+}) => {
   const { slug } = useParams<{ slug: string }>();
-  console.log(loader , "ЧТО ТУТ")
+  console.log(loader, 'ЧТО ТУТ');
 
-
-  const getParentLink = (name: string | null,
-                         persons: Person[],
-                          type: Type
+  const getParentLink = (
+    name: string | null,
+    persons: Person[],
+    type: Type,
   ) => {
     const parent = persons.find(p => p.name === name);
     return parent ? (
-      <NavLink to={`../${parent.slug}`} className={classNames(type === Type.mother ? "has-text-danger" : '')}>{parent.name || '-'}</NavLink>
+      <NavLink
+        to={`../${parent.slug}`}
+        className={classNames(type === Type.mother ? 'has-text-danger' : '')}
+      >
+        {parent.name || '-'}
+      </NavLink>
     ) : (
       name || '-'
     );
@@ -34,16 +50,18 @@ export const PeopleTable: React.FC<PeopleTable> = ({ persons, error , loader }) 
   return (
     <div className="block">
       <div className="box table-container">
-        {loader && (
-          <Loader />
-        )}
-        {error ? (
+        {loader === 'loading' && <Loader />}
+
+        {error && (
           <p data-cy="peopleLoadingError" className="has-text-danger">
             Something went wrong
           </p>
-        ) : persons.length === 0 ? (
+        )}
+
+        {loader === 'loaded' && !persons.length && (
           <p data-cy="noPeopleMessage">There are no people on the server</p>
-        ) : (
+        )}
+        {!!persons.length && (
           <table
             data-cy="peopleTable"
             className="table is-striped is-hoverable is-narrow is-fullwidth"
@@ -67,15 +85,19 @@ export const PeopleTable: React.FC<PeopleTable> = ({ persons, error , loader }) 
                   )}
                 >
                   <td>
-                    <NavLink to={`../${person.slug}`}>{person.name}</NavLink>
+                    <NavLink to={`../${person.slug}`} className={classNames(person.sex === Sex.women ? 'has-text-danger' : '')}>{person.name}</NavLink>
                   </td>
 
                   <td>{person.sex}</td>
                   <td>{person.born}</td>
                   <td>{person.died}</td>
 
-                  <td>{getParentLink(person.motherName, persons, Type.mother)}</td>
-                  <td>{getParentLink(person.fatherName, persons, Type.father)}</td>
+                  <td>
+                    {getParentLink(person.motherName, persons, Type.mother)}
+                  </td>
+                  <td>
+                    {getParentLink(person.fatherName, persons, Type.father)}
+                  </td>
                 </tr>
               ))}
             </tbody>

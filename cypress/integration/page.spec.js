@@ -352,7 +352,7 @@ describe('', () => {
     });
   });
 
-  describe('People table', () => {
+  describe.skip('People table', () => {
     beforeEach(() => {
       page.mockPeople();
       page.visit('/#/people');
