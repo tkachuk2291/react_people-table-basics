@@ -12,11 +12,11 @@ export const People = () => {
     LoaderEnum.initial
   );
 
-  const [persons, setPersons] = useState<Person[]>([]);  useEffect(() => {
+  const [people, setPeople] = useState<Person[]>([]);  useEffect(() => {
     setLoader(LoaderEnum.loading);
 
 
-    getPeople().then((data) => {setPersons(data)})
+    getPeople().then((data) => {setPeople(data)})
       .catch(error => {
         setError(error);
       })
@@ -28,7 +28,7 @@ export const People = () => {
   return (
     <>
       <h1 className="title">People Page</h1>
-      <PeopleTable persons={persons} error={error} loader={loader} />
+      <PeopleTable people={people} error={error} loader={loader} />
     </>
   );
 };
