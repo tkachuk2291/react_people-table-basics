@@ -5,8 +5,8 @@ import React from 'react';
 import classNames from 'classnames';
 import { LoaderEnum } from '../types/loader';
 
-interface PeopleTable {
-  persons: Person[];
+interface PeopleTableProps {
+  people: Person[];
   error: string;
   loader: LoaderEnum;
 }
@@ -21,8 +21,8 @@ enum Sex {
   women = 'f',
 }
 
-export const PeopleTable: React.FC<PeopleTable> = ({
-  persons,
+export const PeopleTable: React.FC<PeopleTableProps> = ({
+  people,
   error,
   loader,
 }) => {
@@ -30,10 +30,10 @@ export const PeopleTable: React.FC<PeopleTable> = ({
 
   const getParentLink = (
     name: string | null,
-    persons: Person[],
+    people: Person[],
     type: Type,
   ) => {
-    const parent = persons.find(p => p.name === name);
+    const parent = people.find(p => p.name === name);
     return parent ? (
       <NavLink
         to={`/people/${parent.slug}`}
@@ -57,10 +57,10 @@ export const PeopleTable: React.FC<PeopleTable> = ({
           </p>
         )}
 
-        {loader === 'loaded' && !persons.length && (
+        {loader === 'loaded' && !people.length && (
           <p data-cy="noPeopleMessage">There are no people on the server</p>
         )}
-        {!!persons.length && (
+        {!!people.length && (
           <table
             data-cy="peopleTable"
             className="table is-striped is-hoverable is-narrow is-fullwidth"
@@ -76,12 +76,14 @@ export const PeopleTable: React.FC<PeopleTable> = ({
               </tr>
             </thead>
             <tbody>
-              {persons.map(person => (
+              {people.map(person => (
                 <tr
                   data-cy="person"
                   className={classNames(
                     person.slug === slug ? 'has-background-warning' : '',
-                  )}>
+                  )}
+                  key={person.slug}
+                >
                   <td>
                     <NavLink
                       to={`/people/${person.slug}`}
@@ -98,10 +100,10 @@ export const PeopleTable: React.FC<PeopleTable> = ({
                   <td>{person.died}</td>
 
                   <td>
-                    {getParentLink(person.motherName, persons, Type.mother)}
+                    {getParentLink(person.motherName, people, Type.mother)}
                   </td>
                   <td>
-                    {getParentLink(person.fatherName, persons, Type.father)}
+                    {getParentLink(person.fatherName, people, Type.father)}
                   </td>
                 </tr>
               ))}
